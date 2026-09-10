@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Python",
+    "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+    "color": "#3776AB",
+    "level": 90,
+    "description": "Strong in Python for backend development, data processing, and scripting with frameworks like Django and FastAPI."
+  },
+  {
+    "name": "Java",
+    "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
+    "color": "#E76F00",
+    "level": 85,
+    "description": "Experienced in object-oriented programming, building robust applications and REST APIs with Spring Boot."
+  },
+  {
+    "name": "JavaScript",
+    "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+    "color": "#F7DF1E",
+    "level": 80,
+    "description": "Proficient in modern JavaScript, DOM manipulation, and asynchronous programming for interactive web apps."
+  },
+  {
+    "name": "HTML",
+    "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
+    "color": "#E34F26",
+    "level": 95,
+    "description": "Expert in semantic HTML5, accessibility, and building well-structured, SEO-friendly web content."
+  },
+  {
+    "name": "CSS",
+    "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
+    "color": "#1572B6",
+    "level": 90,
+    "description": "Skilled in CSS3, responsive design, Flexbox, Grid, and modern styling techniques for beautiful UIs."
+  }
+]
