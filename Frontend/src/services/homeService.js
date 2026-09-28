@@ -104,6 +104,96 @@ export const homeAPI = {
   },
 
   /**
+   * Get all homepage skills
+   * @returns {Promise}
+   */
+  getSkills: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/homepage-skills/`, {
+        headers: getAuthHeaders(),
+      })
+      if (!response.ok) {
+        throw new Error('Failed to fetch skills')
+      }
+      return await response.json()
+    } catch (error) {
+      console.error('Error fetching skills:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Create a homepage skill (admin)
+   * @param {object} skillData - Skill data
+   * @returns {Promise}
+   */
+  createSkill: async (skillData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/homepage-skills/`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(skillData),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || error.detail || 'Failed to create skill')
+      }
+
+      return await response.json()
+    } catch (error) {
+      throw error
+    }
+  },
+
+  /**
+   * Update a homepage skill (admin)
+   * @param {number} id - Skill ID
+   * @param {object} skillData - Updated skill data
+   * @returns {Promise}
+   */
+  updateSkill: async (id, skillData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/homepage-skills/${id}/`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(skillData),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || error.detail || 'Failed to update skill')
+      }
+
+      return await response.json()
+    } catch (error) {
+      throw error
+    }
+  },
+
+  /**
+   * Delete a homepage skill (admin)
+   * @param {number} id - Skill ID
+   * @returns {Promise}
+   */
+  deleteSkill: async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/homepage-skills/${id}/`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      })
+
+      if (!response.ok && response.status !== 204) {
+        throw new Error('Failed to delete skill')
+      }
+
+      return { success: true }
+    } catch (error) {
+      throw error
+    }
+  },
+
+  /**
    * Subscribe to newsletter
    * @param {string} email - Email address
    * @param {string} firstName - First name (optional)

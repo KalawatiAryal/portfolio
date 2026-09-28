@@ -2,7 +2,7 @@
 Serializers for portfolio app.
 """
 from rest_framework import serializers
-from .models import Project, Skill, Experience, Contact, HeroSection, HeroStat, NewsletterSubscriber
+from .models import Project, Skill, Experience, Contact, HeroSection, HeroStat, NewsletterSubscriber, HomepageSkill
 
 
 class HeroStatSerializer(serializers.ModelSerializer):
@@ -81,6 +81,27 @@ class NewsletterSubscriberSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("This email is already subscribed.")
         
         return super().create(validated_data)
+
+
+class HomepageSkillSerializer(serializers.ModelSerializer):
+    """Serializer for homepage skills."""
+    
+    iconUrl = serializers.URLField(source='icon_url')
+    level = serializers.IntegerField(source='proficiency', min_value=0, max_value=100)
+    
+    class Meta:
+        model = HomepageSkill
+        fields = [
+            'id', 'name', 'iconUrl', 'color', 'level',
+            'description', 'order', 'is_active', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
+    
+    def validate_color(self, value):
+        """Ensure color starts with #."""
+        if not value.startswith('#'):
+            raise serializers.ValidationError("Color must be a hex value starting with #.")
+        return value
 
 
 class ProjectSerializer(serializers.ModelSerializer):

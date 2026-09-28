@@ -48,6 +48,7 @@ export default function HomePage() {
 
   // Skills state
   const [skills, setSkills] = useState([]);
+  const [navOpen, setNavOpen] = useState(false);
 
   // Fetch hero section on mount
   useEffect(() => {
@@ -108,16 +109,27 @@ export default function HomePage() {
     }
   }, [isAuthenticated, user?.email]);
 
-  // Fetch skills data from public JSON
+  // Fetch skills from API, falling back to static JSON if empty or unavailable
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const response = await fetch('/skills.json');
-        if (!response.ok) throw new Error('Failed to load skills');
-        const data = await response.json();
-        setSkills(data);
+        const data = await homeAPI.getSkills();
+        const skillsList = Array.isArray(data) ? data : data.results || [];
+        if (skillsList.length > 0) {
+          setSkills(skillsList);
+          return;
+        }
+        throw new Error('No skills from API');
       } catch (error) {
-        console.error('Error fetching skills:', error);
+        console.warn('Falling back to static skills:', error);
+        try {
+          const response = await fetch('/skills.json');
+          if (!response.ok) throw new Error('Failed to load skills');
+          const data = await response.json();
+          setSkills(data);
+        } catch (fallbackError) {
+          console.error('Error fetching skills:', fallbackError);
+        }
       }
     };
 
@@ -165,14 +177,24 @@ export default function HomePage() {
             <span className="logo-icon"></span>
            Kala
           </Link>
-          
-          <div className="nav-links">
-            <a href="#hero" className="nav-link">Home</a>
-            <a href="#about" className="nav-link">About</a>
-            <a href="#skills" className="nav-link">Skills</a>
-            <a href="#newsletter" className="nav-link">Projects</a>
-             <a href="#newsletter" className="nav-link"> Experience </a>
-              <a href="#newsletter" className="nav-link">Contact</a>
+
+          <button
+            className="nav-hamburger"
+            aria-label="Toggle navigation"
+            onClick={() => setNavOpen(!navOpen)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <div className={`nav-links ${navOpen ? 'nav-open' : ''}`}>
+            <a href="#hero" className="nav-link" onClick={() => setNavOpen(false)}>Home</a>
+            <a href="#about" className="nav-link" onClick={() => setNavOpen(false)}>About</a>
+            <a href="#skills" className="nav-link" onClick={() => setNavOpen(false)}>Skills</a>
+            <a href="#newsletter" className="nav-link" onClick={() => setNavOpen(false)}>Projects</a>
+            <a href="#newsletter" className="nav-link" onClick={() => setNavOpen(false)}>Experience</a>
+            <a href="#newsletter" className="nav-link" onClick={() => setNavOpen(false)}>Contact</a>
           </div>
         </div>
       </nav>

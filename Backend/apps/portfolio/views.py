@@ -10,13 +10,13 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 
 from .models import (
-    Project, Skill, Experience, Contact, HeroSection, 
-    HeroStat, NewsletterSubscriber
+    Project, Skill, Experience, Contact, HeroSection,
+    HeroStat, NewsletterSubscriber, HomepageSkill
 )
 from .serializers import (
     ProjectSerializer, SkillSerializer, ExperienceSerializer,
     ContactSerializer, HeroSectionSerializer, HeroStatSerializer,
-    NewsletterSubscriberSerializer
+    NewsletterSubscriberSerializer, HomepageSkillSerializer
 )
 
 
@@ -230,6 +230,29 @@ class NewsletterSubscriberViewSet(viewsets.ModelViewSet):
             {'email': email, 'is_subscribed': subscriber.is_subscribed},
             status=status.HTTP_200_OK
         )
+
+
+class HomepageSkillViewSet(viewsets.ModelViewSet):
+    """ViewSet for managing homepage skills."""
+    
+    serializer_class = HomepageSkillSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['order', 'name']
+    ordering = ['order']
+    
+    def get_queryset(self):
+        """Return active skills for public, all for authenticated users."""
+        if self.action == 'list' and not self.request.user.is_authenticated:
+            return HomepageSkill.objects.filter(is_active=True)
+        return HomepageSkill.objects.all()
+    
+    def get_permissions(self):
+        """Allow public read, require auth for write."""
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
 
 class ProjectViewSet(viewsets.ModelViewSet):

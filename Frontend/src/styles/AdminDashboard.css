@@ -175,6 +175,10 @@
   margin-left: 260px;
 }
 
+.admin-hamburger {
+  display: none;
+}
+
 .admin-header {
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -517,7 +521,26 @@
 
 @media (max-width: 768px) {
   .admin-dashboard {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .admin-hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-right: 1rem;
+  }
+
+  .admin-hamburger span {
+    width: 24px;
+    height: 3px;
+    background: var(--dark);
+    border-radius: 2px;
   }
 
   .admin-sidebar {
@@ -536,9 +559,10 @@
   }
 
   .admin-header {
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
     padding: 16px 20px;
   }
 

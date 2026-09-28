@@ -9,12 +9,14 @@ import { useAuth } from '../context/AuthContext';
 import { homeAPI } from '../services/homeService';
 import HeroAdmin from '../components/admin/HeroAdmin';
 import NewsletterAdmin from '../components/admin/NewsletterAdmin';
+import SkillsAdmin from '../components/admin/SkillsAdmin';
 import '../styles/AdminDashboard.css';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { user, logout, refreshUser } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     refreshUser();
@@ -34,7 +36,7 @@ export default function AdminDashboard() {
   return (
     <div className="admin-dashboard">
       {/* Sidebar Navigation */}
-      <aside className="admin-sidebar">
+      <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <div className="sidebar-avatar">
             {avatarSrc ? (
@@ -76,6 +78,15 @@ export default function AdminDashboard() {
             <span className="nav-icon">📧</span>
             <span className="nav-label">Newsletter</span>
           </button>
+
+          <button
+            className={`nav-item ${activeTab === 'skills' ? 'active' : ''}`}
+            onClick={() => setActiveTab('skills')}
+            title="Manage homepage skills"
+          >
+            <span className="nav-icon">🛠️</span>
+            <span className="nav-label">Skills</span>
+          </button>
         </nav>
 
         <div className="sidebar-footer">
@@ -105,6 +116,15 @@ export default function AdminDashboard() {
             <p className="header-subtitle">Manage your site content</p>
           </div>
           <div className="header-right">
+            <button
+              className="admin-hamburger"
+              aria-label="Toggle sidebar"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
             <div className="header-user">
               <div className="header-avatar">
                 {avatarSrc ? (
@@ -125,6 +145,7 @@ export default function AdminDashboard() {
           {activeTab === 'dashboard' && <DashboardOverview />}
           {activeTab === 'hero' && <HeroAdmin />}
           {activeTab === 'newsletter' && <NewsletterAdmin />}
+          {activeTab === 'skills' && <SkillsAdmin />}
         </div>
       </main>
     </div>

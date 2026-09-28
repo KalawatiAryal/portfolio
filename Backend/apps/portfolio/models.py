@@ -70,6 +70,28 @@ class NewsletterSubscriber(models.Model):
         return f"{self.email} - {'Active' if self.is_subscribed else 'Inactive'}"
 
 
+class HomepageSkill(models.Model):
+    """Model for skills displayed on the homepage."""
+    
+    name = models.CharField(max_length=100, help_text="Skill name (e.g., 'Python')")
+    icon_url = models.URLField(max_length=500, help_text="URL to the skill icon image")
+    color = models.CharField(max_length=7, default="#667eea", help_text="Brand color hex (e.g., '#3776AB')")
+    proficiency = models.PositiveIntegerField(default=0, help_text="Proficiency percentage (0-100)")
+    description = models.TextField(help_text="Short description of the skill")
+    order = models.PositiveIntegerField(default=0, help_text="Display order")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name = 'Homepage Skill'
+        verbose_name_plural = 'Homepage Skills'
+    
+    def __str__(self):
+        return self.name
+
+
 class Project(models.Model):
     """Model for portfolio projects."""
     
