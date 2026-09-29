@@ -15,8 +15,14 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me-in-producti
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,api.kalawati.com.np,kalawati.com.np', cast=Csv())
-
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '13.60.17.147',
+    'api.kalawati.com.np',
+    'www.kalawati.com.np',
+    'kalawati.com.np',
+]
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
