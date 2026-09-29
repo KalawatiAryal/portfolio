@@ -10,6 +10,9 @@ import { homeAPI } from '../services/homeService';
 import HeroAdmin from '../components/admin/HeroAdmin';
 import NewsletterAdmin from '../components/admin/NewsletterAdmin';
 import SkillsAdmin from '../components/admin/SkillsAdmin';
+import ProjectsAdmin from '../components/admin/ProjectsAdmin';
+import ExperiencesAdmin from '../components/admin/ExperiencesAdmin';
+import ContactsAdmin from '../components/admin/ContactsAdmin';
 import '../styles/AdminDashboard.css';
 
 export default function AdminDashboard() {
@@ -87,6 +90,33 @@ export default function AdminDashboard() {
             <span className="nav-icon">🛠️</span>
             <span className="nav-label">Skills</span>
           </button>
+
+          <button
+            className={`nav-item ${activeTab === 'projects' ? 'active' : ''}`}
+            onClick={() => setActiveTab('projects')}
+            title="Manage portfolio projects"
+          >
+            <span className="nav-icon">📁</span>
+            <span className="nav-label">Projects</span>
+          </button>
+
+          <button
+            className={`nav-item ${activeTab === 'experiences' ? 'active' : ''}`}
+            onClick={() => setActiveTab('experiences')}
+            title="Manage work experiences"
+          >
+            <span className="nav-icon">💼</span>
+            <span className="nav-label">Experience</span>
+          </button>
+
+          <button
+            className={`nav-item ${activeTab === 'contacts' ? 'active' : ''}`}
+            onClick={() => setActiveTab('contacts')}
+            title="View contact messages"
+          >
+            <span className="nav-icon">✉️</span>
+            <span className="nav-label">Contacts</span>
+          </button>
         </nav>
 
         <div className="sidebar-footer">
@@ -146,6 +176,9 @@ export default function AdminDashboard() {
           {activeTab === 'hero' && <HeroAdmin />}
           {activeTab === 'newsletter' && <NewsletterAdmin />}
           {activeTab === 'skills' && <SkillsAdmin />}
+          {activeTab === 'projects' && <ProjectsAdmin />}
+          {activeTab === 'experiences' && <ExperiencesAdmin />}
+          {activeTab === 'contacts' && <ContactsAdmin />}
         </div>
       </main>
     </div>

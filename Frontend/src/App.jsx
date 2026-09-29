@@ -6,6 +6,8 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import AdminDashboard from './pages/AdminDashboard'
 import ProfilePage from './pages/ProfilePage'
+import ProjectDetailPage from './pages/ProjectDetailPage'
+import ExperienceDetailPage from './pages/ExperienceDetailPage'
 
 // Protected route component
 function ProtectedRoute({ children, requireStaff = false }) {
@@ -45,6 +47,8 @@ function AppContent() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/projects/:id" element={<ProjectDetailPage />} />
+      <Route path="/experiences/:id" element={<ExperienceDetailPage />} />
       <Route
         path="/login"
         element={

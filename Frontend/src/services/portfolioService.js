@@ -183,6 +183,21 @@ export const skillAPI = {
 
 export const experienceAPI = {
   /**
+   * Get experience by ID
+   * @param {number} id - Experience ID
+   * @returns {Promise}
+   */
+  getById: async (id) => {
+    try {
+      const response = await fetchWithAuth(`${API_BASE_URL}/experiences/${id}/`)
+      if (!response.ok) throw new Error('Failed to fetch experience')
+      return await response.json()
+    } catch (error) {
+      throw new Error(error.message || 'Failed to fetch experience')
+    }
+  },
+
+  /**
    * Get all experiences
    * @returns {Promise}
    */
@@ -298,6 +313,57 @@ export const contactAPI = {
       return await response.json()
     } catch (error) {
       throw new Error(error.message || 'Failed to fetch contact count')
+    }
+  },
+
+  /**
+   * Get all contacts (admin)
+   * @returns {Promise}
+   */
+  getAll: async () => {
+    try {
+      const response = await fetchWithAuth(`${API_BASE_URL}/contacts/`)
+      if (!response.ok) throw new Error('Failed to fetch contacts')
+      return await response.json()
+    } catch (error) {
+      throw new Error(error.message || 'Failed to fetch contacts')
+    }
+  },
+
+  /**
+   * Update contact (admin)
+   * @param {number} id - Contact ID
+   * @param {object} contactData - Updated contact data
+   * @returns {Promise}
+   */
+  update: async (id, contactData) => {
+    try {
+      const response = await fetchWithAuth(`${API_BASE_URL}/contacts/${id}/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contactData),
+      })
+      if (!response.ok) throw new Error('Failed to update contact')
+      return await response.json()
+    } catch (error) {
+      throw new Error(error.message || 'Failed to update contact')
+    }
+  },
+
+  /**
+   * Delete contact (admin)
+   * @param {number} id - Contact ID
+   * @returns {Promise}
+   */
+  delete: async (id) => {
+    try {
+      const response = await fetchWithAuth(`${API_BASE_URL}/contacts/${id}/`, {
+        method: 'DELETE',
+      })
+      if (!response.ok) throw new Error('Failed to delete contact')
+      return response
+    } catch (error) {
+      throw new Error(error.message || 'Failed to delete contact')
     }
   },
 }

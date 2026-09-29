@@ -1,0 +1,29 @@
+[
+  {
+    "id": "fallback-1",
+    "title": "Portfolio Website",
+    "description": "A modern, responsive portfolio platform built with React and Django REST Framework. Features dynamic content management, JWT authentication, and a clean admin panel.",
+    "technologies": "React, Django, DRF, PostgreSQL",
+    "link": "",
+    "github_link": "",
+    "is_featured": true
+  },
+  {
+    "id": "fallback-2",
+    "title": "Task Management API",
+    "description": "A RESTful API for managing tasks with authentication, filtering, pagination, and detailed documentation. Designed for scalability and easy integration.",
+    "technologies": "Python, Django, DRF, JWT",
+    "link": "",
+    "github_link": "",
+    "is_featured": true
+  },
+  {
+    "id": "fallback-3",
+    "title": "Real-Time Chat Application",
+    "description": "A real-time messaging app with WebSocket support, private and group chats, and a responsive React frontend.",
+    "technologies": "React, Django Channels, WebSockets, Redis",
+    "link": "",
+    "github_link": "",
+    "is_featured": true
+  }
+]

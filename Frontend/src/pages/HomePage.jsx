@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { homeAPI } from '../services/homeService';
+import { projectAPI, experienceAPI, contactAPI } from '../services/portfolioService';
 import '../styles/HomePage.css';
 
 function SkillIcon({ name, src, color }) {
@@ -49,6 +50,15 @@ export default function HomePage() {
   // Skills state
   const [skills, setSkills] = useState([]);
   const [navOpen, setNavOpen] = useState(false);
+
+  // Portfolio state
+  const [projects, setProjects] = useState([]);
+  const [experiences, setExperiences] = useState([]);
+
+  // Contact form state
+  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+  const [contactStatus, setContactStatus] = useState('');
+  const [contactLoading, setContactLoading] = useState(false);
 
   // Fetch hero section on mount
   useEffect(() => {
@@ -136,6 +146,78 @@ export default function HomePage() {
     fetchSkills();
   }, []);
 
+  // Fetch projects and experiences from the portfolio API
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const data = await projectAPI.getAll();
+        const projectsList = Array.isArray(data) ? data : data.results || [];
+        if (projectsList.length > 0) {
+          setProjects(projectsList);
+          return;
+        }
+        throw new Error('No projects from API');
+      } catch (error) {
+        console.warn('Falling back to static projects:', error);
+        try {
+          const response = await fetch('/projects.json');
+          if (!response.ok) throw new Error('Failed to load projects');
+          const data = await response.json();
+          setProjects(data);
+        } catch (fallbackError) {
+          console.error('Error fetching projects:', fallbackError);
+        }
+      }
+    };
+
+    const fetchExperiences = async () => {
+      try {
+        const data = await experienceAPI.getAll();
+        const experiencesList = Array.isArray(data) ? data : data.results || [];
+        if (experiencesList.length > 0) {
+          setExperiences(experiencesList);
+          return;
+        }
+        throw new Error('No experiences from API');
+      } catch (error) {
+        console.warn('Falling back to static experiences:', error);
+        try {
+          const response = await fetch('/experiences.json');
+          if (!response.ok) throw new Error('Failed to load experiences');
+          const data = await response.json();
+          setExperiences(data);
+        } catch (fallbackError) {
+          console.error('Error fetching experiences:', fallbackError);
+        }
+      }
+    };
+
+    fetchProjects();
+    fetchExperiences();
+  }, []);
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    if (!contactForm.name.trim() || !contactForm.email.trim() || !contactForm.message.trim()) {
+      setContactStatus('error');
+      return;
+    }
+
+    setContactLoading(true);
+    try {
+      await contactAPI.submit(contactForm);
+      setContactStatus('success');
+      setContactForm({ name: '', email: '', message: '' });
+      setTimeout(() => setContactStatus(''), 3000);
+    } catch (error) {
+      console.error('Contact error:', error);
+      setContactStatus('error');
+      setTimeout(() => setContactStatus(''), 3000);
+    } finally {
+      setContactLoading(false);
+    }
+  };
+
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
     if (!email.trim()) {
@@ -168,6 +250,22 @@ export default function HomePage() {
     }
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+    });
+  };
+
+  const handleProjectClick = (project) => {
+    navigate(`/projects/${project.id}`, { state: { project } });
+  };
+
+  const handleExperienceClick = (experience) => {
+    navigate(`/experiences/${experience.id}`, { state: { experience } });
+  };
+
   return (
     <div className="home-page">
       {/* Navigation Bar */}
@@ -192,9 +290,9 @@ export default function HomePage() {
             <a href="#hero" className="nav-link" onClick={() => setNavOpen(false)}>Home</a>
             <a href="#about" className="nav-link" onClick={() => setNavOpen(false)}>About</a>
             <a href="#skills" className="nav-link" onClick={() => setNavOpen(false)}>Skills</a>
-            <a href="#newsletter" className="nav-link" onClick={() => setNavOpen(false)}>Projects</a>
-            <a href="#newsletter" className="nav-link" onClick={() => setNavOpen(false)}>Experience</a>
-            <a href="#newsletter" className="nav-link" onClick={() => setNavOpen(false)}>Contact</a>
+            <a href="#projects" className="nav-link" onClick={() => setNavOpen(false)}>Projects</a>
+            <a href="#experience" className="nav-link" onClick={() => setNavOpen(false)}>Experience</a>
+            <a href="#contact" className="nav-link" onClick={() => setNavOpen(false)}>Contact</a>
           </div>
         </div>
       </nav>
@@ -379,6 +477,159 @@ export default function HomePage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Projects Section */}
+      <section id="projects" className="projects">
+        <div className="projects-container">
+          <h2 className="section-title">Projects</h2>
+          <p className="section-subtitle">A selection of my recent work</p>
+
+          {projects.length > 0 ? (
+            <div className="projects-grid">
+              {projects.map((project, idx) => (
+                <div
+                  key={project.id}
+                  className="project-card clickable"
+                  style={{ animationDelay: `${idx * 0.1}s` }}
+                  onClick={() => handleProjectClick(project)}
+                >
+                  {project.is_featured && (
+                    <span className="featured-ribbon">⭐ Featured</span>
+                  )}
+                  <div className="project-body">
+                    <h3 className="project-title">{project.title}</h3>
+                    <p className="project-description">{project.description}</p>
+                    {project.technologies && (
+                      <div className="tech-badges">
+                        {project.technologies.split(',').map((tech, i) => (
+                          <span key={i} className="tech-badge">{tech.trim()}</span>
+                        ))}
+                      </div>
+                    )}
+                    <div className="project-links">
+                      {project.link && (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="project-link primary"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          🔗 Live
+                        </a>
+                      )}
+                      {project.github_link && (
+                        <a
+                          href={project.github_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="project-link secondary"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          💻 GitHub
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <p>No projects yet.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Experience Section */}
+      <section id="experience" className="experience">
+        <div className="experience-container">
+          <h2 className="section-title">Experience</h2>
+          <p className="section-subtitle">My professional journey</p>
+
+          {experiences.length > 0 ? (
+            <div className="experience-grid">
+              {experiences.map((exp, idx) => (
+                <div
+                  key={exp.id}
+                  className="experience-card clickable"
+                  style={{ animationDelay: `${idx * 0.1}s` }}
+                  onClick={() => handleExperienceClick(exp)}
+                >
+                  {exp.is_current && (
+                    <span className="current-ribbon">✨ Current</span>
+                  )}
+                  <h3 className="experience-title">{exp.title}</h3>
+                  <p className="experience-company">{exp.company}</p>
+                  <p className="experience-dates">
+                    {formatDate(exp.start_date)} — {exp.is_current ? 'Present' : formatDate(exp.end_date)}
+                  </p>
+                  {exp.description && (
+                    <p className="experience-description">{exp.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <p>No experiences yet.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="contact">
+        <div className="contact-container">
+          <h2 className="section-title">Contact</h2>
+          <p className="section-subtitle">Get in touch for opportunities or questions</p>
+
+          <form onSubmit={handleContactSubmit} className="contact-form">
+            <input
+              type="text"
+              name="name"
+              placeholder="Your name"
+              value={contactForm.name}
+              onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+              disabled={contactLoading}
+              className="contact-input"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Your email"
+              value={contactForm.email}
+              onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+              disabled={contactLoading}
+              className="contact-input"
+            />
+            <textarea
+              name="message"
+              placeholder="Your message"
+              value={contactForm.message}
+              onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+              disabled={contactLoading}
+              rows="5"
+              className="contact-textarea"
+            ></textarea>
+            <button
+              type="submit"
+              disabled={contactLoading}
+              className="contact-btn"
+            >
+              {contactLoading ? 'Sending...' : 'Send Message'}
+            </button>
+          </form>
+
+          {contactStatus === 'success' && (
+            <div className="success-message">✓ Your message has been sent!</div>
+          )}
+          {contactStatus === 'error' && (
+            <div className="error-message">⚠ Please fill in all fields correctly.</div>
+          )}
         </div>
       </section>
 

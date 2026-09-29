@@ -1,0 +1,29 @@
+[
+  {
+    "id": "exp-fallback-1",
+    "title": "Full-Stack Developer",
+    "company": "Cognition AI",
+    "description": "Building modern web applications with React and Django, focusing on clean architecture, performance, and user experience.",
+    "start_date": "2024-01-15",
+    "end_date": null,
+    "is_current": true
+  },
+  {
+    "id": "exp-fallback-2",
+    "title": "Backend Engineer",
+    "company": "Freelance",
+    "description": "Designed and implemented REST APIs, authentication flows, and database models for client projects using Django and PostgreSQL.",
+    "start_date": "2023-06-01",
+    "end_date": "2023-12-31",
+    "is_current": false
+  },
+  {
+    "id": "exp-fallback-3",
+    "title": "Junior Developer",
+    "company": "Tech Solutions",
+    "description": "Contributed to frontend features, fixed UI bugs, and learned modern development workflows in a collaborative team environment.",
+    "start_date": "2022-03-01",
+    "end_date": "2023-05-30",
+    "is_current": false
+  }
+]
